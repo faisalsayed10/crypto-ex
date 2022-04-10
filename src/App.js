@@ -1,17 +1,16 @@
-import { Box, Container, Grid, Text } from "@mantine/core";
+import { ActionIcon, Card, Container, Grid, Text } from "@mantine/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
+import { X } from "tabler-icons-react";
 import AddCoinInput from "./AddCoinInput";
 import "./App.css";
+import DownloadExtension from "./DownloadExtension";
+import GithubCorner from "./GithubCorner";
 import Loading from "./Loading";
 import Price from "./Price";
 
 const DEFAULT_COINS = ["bitcoin", "ethereum", "dogecoin", "ripple", "binancecoin"];
-
-// TODO: Remove coin charts button
-// TODO: Add coin to localStorage when 200 response and trigger fetchData()
-// TODO: Add extension button with how-to (only on web - mebbe use envs).
 
 function App() {
 	const [data, setData] = useState();
@@ -43,6 +42,7 @@ function App() {
 		);
 
 		for (let i = 0; i < coins.length; i++) {
+			if (!coins[i]) return;
 			let chart = { index: [], price: [], market: {} };
 			let { data: result } = await axios.get(
 				`https://api.coingecko.com/api/v3/coins/${coins[i]}/market_chart?vs_currency=usd&days=1&interval=minutely`
@@ -58,32 +58,59 @@ function App() {
 		}
 	};
 
+	const removeCoin = (coin) => {
+		const coins = JSON.parse(localStorage.getItem("coins"));
+		localStorage.setItem("coins", JSON.stringify(coins.filter((e) => e !== coin)));
+
+		setData((prevState) => {
+			const state = { ...prevState };
+			state[coin] = undefined;
+			return state;
+		});
+	};
+
+	const addCoin = (coin) => {
+		const coins = JSON.parse(localStorage.getItem("coins"));
+		if (coins.includes(coin)) return;
+		localStorage.setItem("coins", JSON.stringify([...coins, coin]));
+
+		fetchData();
+	};
+
 	return (
 		<Container mt="md">
+			<GithubCorner />
 			{isLoading || !data ? (
 				<Loading />
 			) : (
 				<>
-					<AddCoinInput />
+					<AddCoinInput addCoin={addCoin} />
 					<Grid align="center" justify="center">
 						{Object.keys(data).map((coin) => {
+							if (!data[coin]) return null;
 							const increased = data[coin].market.price_change_percentage_24h > 0 ? true : false;
 							return (
 								<Grid.Col xs={6} key={coin}>
-									<Box
+									<Card
+										shadow="sm"
+										py="md"
 										sx={{
 											display: "flex",
+											position: "relative",
 											flexDirection: "column",
 											alignItems: "center",
-											border: "1px solid #E2E8F0",
-											borderRadius: "5px",
-											boxShadow: "2.1px 4.1px 5.2px -1.7px hsl(286deg 36% 56% / 0.36)"
+											border: "0.5px solid #E2E8F0"
 										}}
-										py="md"
 									>
+										<ActionIcon
+											variant="hover"
+											sx={{ position: "absolute", right: 10 }}
+											onClick={() => removeCoin(coin)}
+										>
+											<X size={16} />
+										</ActionIcon>
 										<Price coin={data[coin].market} increased={increased} />
 										<Plot
-											onUpdate={() => console.log("chart updated")}
 											data={[
 												{
 													name: "Price ($)",
@@ -108,19 +135,20 @@ function App() {
 												yaxis2: { showticklabels: false, domain: [0, 0.1], anchor: "x" }
 											}}
 										/>
-									</Box>
+									</Card>
 								</Grid.Col>
 							);
 						})}
 					</Grid>
-					<Text size="xs" mt="md">
-						Powered by{" "}
-						<a href="https://www.coingecko.com/" target="_blank" rel="noreferrer">
-							CoinGecko
-						</a>
-					</Text>
 				</>
 			)}
+			{process.env.REACT_APP_ENVIRONMENT === "web" && <DownloadExtension />}
+			<Text size="xs" mt="md" align="center">
+				Powered by{" "}
+				<a href="https://www.coingecko.com/" target="_blank" rel="noreferrer">
+					CoinGecko
+				</a>
+			</Text>
 		</Container>
 	);
 }

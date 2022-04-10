@@ -6,7 +6,7 @@ const Price = ({ coin, increased }) => {
 	return (
 		<Box sx={{ display: "flex", alignItems: "center" }}>
 			<Image src={coin.image} alt={coin.name} width="32px" mr="5px" />
-			<Text size="xl" mr="xs">
+			<Text weight="bold" size="xl" mr="xs">
 				{coin.symbol.toUpperCase()} - ${parseFloat(coin.current_price.toFixed(3))}
 			</Text>
 			<Box

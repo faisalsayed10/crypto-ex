@@ -4,17 +4,20 @@ import axios from "axios";
 import { useState } from "react";
 import { Check, X } from "tabler-icons-react";
 
-const AddCoinInput = () => {
+const AddCoinInput = ({ addCoin }) => {
 	const [id, setId] = useState("");
 
 	const handleClick = async (e) => {
-    e.preventDefault();
+		e.preventDefault();
+		if (!id.trim()) return;
+
 		try {
 			const response = await axios.get(
-				`https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false`
+				`https://api.coingecko.com/api/v3/coins/${id.trim()}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false`
 			);
 
 			if (response.status === 200) {
+				addCoin(id.trim());
 				showNotification({
 					title: "Success!",
 					message: "Coin was added successfully!",
@@ -39,6 +42,8 @@ const AddCoinInput = () => {
 					color: "red"
 				});
 			}
+		} finally {
+			setId("");
 		}
 	};
 
