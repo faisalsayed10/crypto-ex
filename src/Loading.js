@@ -1,19 +1,20 @@
-import { Box, Loader } from '@mantine/core';
-import React from 'react'
+import { Box, Loader } from "@mantine/core";
+import React from "react";
 
 const Loading = () => {
-  return (
+	return (
 		<Box
 			sx={{
 				display: "flex",
 				alignItems: "center",
 				justifyContent: "center",
-				minHeight: "100vh"
+				minHeight: "100vh",
+				minWidth: "383px"
 			}}
 		>
 			<Loader color="red" size="xl" variant="bars" />
 		</Box>
 	);
-}
+};
 
-export default Loading
+export default Loading;

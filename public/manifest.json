@@ -1,12 +1,13 @@
 {
-  "name": "Crypto Ex",
-  "manifest_version": 3,
-  "version": "1.0",
-  "description": "A chrome extension which tracks cryptocurrency prices realtime.",
-  "action": {
+	"name": "Crypto Ex",
+	"manifest_version": 3,
+	"version": "1.0",
+	"description": "A chrome extension which tracks cryptocurrency prices realtime.",
+	"action": {
 		"default_name": "Crypto Ex",
-    "default_icon": "favicon.ico",
-    "default_popup": "index.html"
-  },
-  "permissions": []
+		"default_icon": "icon48.png",
+		"default_popup": "index.html"
+	},
+	"icons": { "16": "icon48.png", "48": "icon48.png", "128": "icon128.png" },
+	"permissions": []
 }
