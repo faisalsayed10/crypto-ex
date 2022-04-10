@@ -5,7 +5,7 @@ const DownloadExtension = () => {
 		<Box mt="md">
 			<Title order={5} align="center">
 				<a
-					href="https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/faisalsayed10/crypto-ex/tree/main/public"
+					href="https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/faisalsayed10/crypto-ex/tree/main/build"
 					target="_blank"
 					rel="noreferrer"
 					style={{ color: "inherit" }}
